@@ -1,20 +1,17 @@
 #!/bin/sh
 
-# Directory in which librarian-puppet should manage its modules directory
-PUPPET_DIR='/vagrant/puppet'
-
 # NB: librarian-puppet might need git installed. If it is not already installed
 # in your basebox, this will manually install it at this point using apt or yum
+export DEBIAN_FRONTEND=noninteractive
 
+
+#sudo sed -i  's@http.us.debian.org/debian@archive.debian.org/debian@g' /etc/apt/sources.list
+#sudo sed -i  's@squeeze-updates@squeeze@g' /etc/apt/sources.list
 apt-get update
 apt-get upgrade -y
 apt-get -q -y install git
-
-if [ `gem query --local | grep librarian-puppet | wc -l` -eq 0 ]; then
- gem install librarian-puppet
- cd $PUPPET_DIR && librarian-puppet install --clean
-else
- cd $PUPPET_DIR && librarian-puppet update
-fi
-
-sudo -E puppet apply -vv --modulepath=$PUPPET_DIR/modules/ $PUPPET_DIR/manifests/main.pp
+apt-get -y install mysql-client php5-mysql
+apt-get -y install php5
+apt-get -y install apache2 libapache2-mod-php5
+/etc/init.d/apache2 restart
+exit 0
